@@ -1,0 +1,86 @@
+# BudgetIQ
+
+> BudgetIQ — AI asosidagi shaxsiy moliya ilovasi. Daromad va xarajatlarni kuzatadi, oylik byudjet limitlarini nazorat qiladi, vizual analitika va CSV eksport beradi hamda foydalanuvchining haqiqiy tranzaksiyalari asosida AI moliyaviy maslahat beradi. Interfeys o'zbek, rus va ingliz tillarida.
+
+## Asosiy ma'lumotlar
+
+- Nom: BudgetIQ
+- Tur: Web ilova (Next.js 16, App Router, React 19)
+- Toifasi: Shaxsiy moliya / xarajatlar kuzatuvi / byudjet
+- Tillar: uz (default), ru, en
+- Narx: bepul, karta talab qilinmaydi
+- Ro'yxatdan o'tish: email + parol yoki Google OAuth
+- URL: /
+
+## Imkoniyatlar
+
+- Tranzaksiyalar: kirim/chiqim, kategoriya, sana, izoh; sana oralig'i va kategoriya bo'yicha filtr.
+- Smart Input: "tushlikka 45 ming, taksiga 20 ming" kabi matnni AI alohida tranzaksiyalarga ajratadi.
+- Byudjetlar: kategoriya bo'yicha oylik limit, 80% va 100% ogohlantirishlar.
+- Analitika: 6 oylik dinamika, kategoriyalar taqsimoti, jamg'arma darajasi, AI xulosalar.
+- AI maslahatchi: tranzaksiyalar asosida tabiiy til savol-javob; API kaliti bo'lmasa lokal tahlil rejimi.
+- CSV eksport: tanlangan davr uchun hisobot.
+- 14 ta tayyor kategoriya (oziq-ovqat, transport, uy-joy, kommunal, kafe, ko'ngilochar, salomatlik, kiyim, ta'lim, boshqa xarajat, oylik, frilans, investitsiya, boshqa daromad).
+- Valyutalar: UZS, USD, EUR.
+
+## Sahifalar
+
+- `/` — ommaviy landing: imkoniyatlar, 3 qadamli qo'llanma, AI namoyishi, FAQ.
+- `/login` — kirish (noindex).
+- `/register` — ro'yxatdan o'tish (noindex).
+- `/dashboard` — umumiy balans, oylik xulosa, grafiklar (auth talab qiladi, noindex).
+- `/transactions` — tranzaksiyalar ro'yxati va qo'shish (auth, noindex).
+- `/budgets` — byudjet limitlari (auth, noindex).
+- `/ai-advisor` — AI suhbat (auth, noindex).
+- `/settings` — profil, valyuta, til, xavfsizlik (auth, noindex).
+
+## API (JSON, autentifikatsiya talab qiladi)
+
+- `GET /api/analytics` — davr bo'yicha jamlanma, kategoriyalar, oylik dinamika, insights.
+- `GET/POST /api/transactions`, `PATCH/DELETE /api/transactions/:id`
+- `GET/POST /api/budgets`, `PATCH/DELETE /api/budgets/:id`
+- `GET /api/categories`, `POST /api/categories`
+- `GET /api/export?from=&to=` — CSV
+- `POST /api/ai/parse` — matndan tranzaksiya ajratish
+- `GET /api/ai/summary` — oylik AI xulosa
+- `POST /api/ai/chat` — AI maslahatchi (stream)
+- `GET/PATCH /api/profile`
+
+## Ma'lumotlar qayerda saqlanadi
+
+- PostgreSQL bazasi (Prisma ORM). Jadvallar: User, Account, Session, VerificationToken (NextAuth), Category, Transaction, Budget.
+- Har bir tranzaksiya, byudjet va kategoriya `userId` bilan bog'langan; API so'rovlari faqat joriy foydalanuvchi ma'lumotiga ruxsat beradi.
+- Parollar bcrypt bilan hashlanadi. Sessiya JWT cookie'da (30 kun) saqlanadi.
+- Til tanlovi `lang` cookie va localStorage'da; mavzu (theme) localStorage'da.
+- AI kaliti faqat serverda (`.env`), brauzerga chiqmaydi. AI so'roviga faqat agregatsiya qilingan moliyaviy kontekst yuboriladi.
+- CSV eksport fayl sifatida yuklab olinadi, serverda saqlanmaydi.
+
+## Tez-tez so'raladigan savollar
+
+### BudgetIQ nima?
+AI asosidagi shaxsiy moliya ilovasi: daromad/xarajat kuzatuvi, oylik byudjetlar, vizual analitika, CSV eksport va tranzaksiyalarga asoslangan AI maslahatchi.
+
+### Bepulmi?
+Ha. Ro'yxatdan o'tish bepul, bank kartasi talab qilinmaydi.
+
+### AI qanday ishlaydi?
+AI modeli foydalanuvchining joriy moliyaviy jamlanmasi (daromad, xarajat, kategoriyalar, byudjet holati) asosida javob beradi. API kaliti sozlanmagan bo'lsa, ilova lokal tahlil rejimida ishlaydi.
+
+### Ma'lumotlarim xavfsizmi?
+Har bir so'rov foydalanuvchi ID bilan cheklangan, parollar bcrypt bilan hashlanadi, sessiya JWT cookie orqali boshqariladi, AI kaliti faqat serverda saqlanadi.
+
+### Qaysi tillar qo'llab-quvvatlanadi?
+O'zbek (default), rus va ingliz. Tanlov cookie'da saqlanadi va server javoblariga ham qo'llaniladi.
+
+### Excel bilan ishlaydimi?
+Ha, CSV eksport orqali Excel yoki Google Sheets'da ochish mumkin.
+
+## Texnologiyalar
+
+Next.js 16, React 19, TypeScript, Tailwind CSS 4, Prisma 6, PostgreSQL, NextAuth 5, AI SDK 7 (Gemini/OpenAI), TanStack Query, Recharts, Zod.
+
+## Aloqa
+
+- Muallif: Azizjon G'ayratov
+- Loyiha: portfolio / o'quv maqsadida
+- Repozitoriy: lokal loyiha (ochiq URL yo'q)
